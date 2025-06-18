@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "module": "NodeNext",
+    "target": "ESNext",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "noImplicitAny": false,
+    "moduleResolution": "NodeNext",
+    "resolveJsonModule": true,
+    "noEmitOnError": true,
+    "sourceMap": true,
+    "allowJs": false,
+    "outDir": "build",
+    "skipLibCheck": true,
+    "allowArbitraryExtensions": true,
+    "strict": true,
+    "typeRoots": ["types"],
+    "experimentalDecorators": true,
+    "useDefineForClassFields": true
+  },
+  "include": [
+    "./src/**/*.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

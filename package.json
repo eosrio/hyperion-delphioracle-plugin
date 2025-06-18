@@ -1,0 +1,28 @@
+{
+  "name": "hyperion-delphioracle-plugin",
+  "version": "0.1.0",
+  "description": "Hyperion Plugin for DelphiOracle data indexing and API",
+  "homepage": "https://github.com/eosrio/hyperion-delphioracle-plugin#readme",
+  "bugs": {
+    "url": "https://github.com/eosrio/hyperion-delphioracle-plugin/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eosrio/hyperion-delphioracle-plugin.git"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "EOS Rio",
+    "url": "https://eosrio.io"
+  },
+  "type": "module",
+  "main": "build/index.js",
+  "scripts": {
+    "build": "tsc"
+  },
+  "peerDependencies": {
+    "typescript": "^5.8.3",
+    "fastify": "^5.4.0",
+    "@eosrio/hyperion-plugin-core": "^0.1.0"
+  }
+}
