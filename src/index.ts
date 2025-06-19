@@ -2,13 +2,18 @@ import {FastifyInstance, FastifyRequest} from 'fastify';
 import {HyperionDelta, HyperionDeltaHandler, HyperionPlugin} from '@eosrio/hyperion-plugin-core';
 
 // Extended FastifyInstance interface for proper typing
-interface ExtendedFastifyInstance extends FastifyInstance {
-    elastic: any;
-    manager: {
-        chain: string;
-        config: any;
-    };
-}
+// interface ExtendedFastifyInstance extends FastifyInstance {
+//     elastic: any;
+//     manager: {
+//         chain: string;
+//         config: any;
+//     };
+//     antelope: {
+//         chain: {
+//             get_table_rows: (params: any) => Promise<any>;
+//         };
+//     };
+// }
 
 export interface DelphioracleConfig {
     table?: string;
@@ -77,7 +82,7 @@ export default class DelphioraclePlugin extends HyperionPlugin {
     hasApiRoutes = true;
     deltaHandlers: HyperionDeltaHandler[] = [];
 
-    addRoutes(server: FastifyInstance): void {
+    addRoutes(server: FastifyInstance & Record<string, any>): void {
         // Original route
         server.get('/v2/history/get_oracle_datapoints', async (request, reply) => {
             reply.send({message: 'Delphioracle API is running!'});
@@ -86,7 +91,6 @@ export default class DelphioraclePlugin extends HyperionPlugin {
         // New route for oracle datapoints histogram
         server.get('/v2/oracle/get_datapoints_histogram', async (request: FastifyRequest<{Querystring: OracleDatapointsQuery}>, reply) => {
             try {
-                const extServer = server as ExtendedFastifyInstance;
                 const query = request.query;
 
                 console.log();
@@ -199,8 +203,8 @@ export default class DelphioraclePlugin extends HyperionPlugin {
                 };
 
                 // Execute Elasticsearch query
-                const results = await extServer.elastic.search({
-                    index: extServer.manager.chain + '-delta-*',
+                const results = await server.elastic.search({
+                    index: server.manager.chain + '-delta-*',
                     ...searchBody
                 });
 
@@ -239,6 +243,22 @@ export default class DelphioraclePlugin extends HyperionPlugin {
                     message: error.message
                 });
             }
+        });
+
+        server.get('/v2/oracle/pairs', async (request, reply) => {
+            const pairData = await server.antelope.chain.get_table_rows({
+                code: 'delphioracle',
+                scope: 'delphioracle',
+                table: 'pairs',
+                limit: 1000,
+                json: true
+            });
+
+            // return pairData;
+
+            return pairData.rows.map((pair: any) => {
+                return {name: pair.name, precision: pair.quoted_precision};
+            });
         });
     }
 
